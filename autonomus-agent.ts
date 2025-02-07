@@ -19,8 +19,9 @@ const otherConfig = {
   max_tokens: 500,
 };
 
+//@Learn more deepinfra with deepseek r1 https://deepinfra.com/deepseek-ai/DeepSeek-R1
 const zyphAIAgent = new DeepseekAI({
-  model: "NousResearch/Hermes-3-Llama-3.1-405B",
+  model: "deepseek-ai/DeepSeek-R1",
   ...otherConfig,
 });
 
