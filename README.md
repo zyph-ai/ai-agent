@@ -6,6 +6,10 @@ Zyph AI is an advanced AI-powered agent for tracking and analyzing Pump.fun coin
 
 ---
 
+## Algorithm Chart
+
+<img src="./flowchart.jpeg" alt="flowchart" width="100%" height="100%"/>
+
 ## Installation
 
 Ensure you have **pnpm** installed. If not, install it using:
