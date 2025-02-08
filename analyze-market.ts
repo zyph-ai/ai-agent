@@ -58,8 +58,8 @@ export const analyzeSolanaCoin = async (): Promise<string | void> => {
 
     if (
       bundle?.total_percentage_bundled > 36 ||
-      bundle?.creator_analysis.risk_level === "HIGH" ||
-      bundle?.creator_analysis.holding_percentage > 36
+      bundle?.creator_analysis?.risk_level === "HIGH" ||
+      bundle?.creator_analysis?.holding_percentage > 36
     ) {
       console.log(
         `❗ Total holding / deployer holding percentage is too high (${bundle.total_percentage_bundled}/${bundle.creator_analysis.holding_percentage}%) and this token is very risky based on deployer history, trying next coin...\n`
@@ -121,6 +121,10 @@ Analyze the coin for safety reasoning like you can check on bundle total holding
 If deployer has clean history not have rugged history. Please dont put words "low rug risk" Because maybe it will rugged or not? Please make sentiment be cautious and DYOR.
 Your task is to analyze and also give sentiment or give what your thoughts make it simple, clear and please give random analyze depending on your thoughts.
 Please write the analysis short but clear and make sense. And write sentiment very short, clear and make sense. Dont write all too much.
+Please make analysis, sentiment only with 150 character max. dont write all too much.
+
+Like this Example: 
+1. Price surged 314% in 24h. Buy volume dominates at 54%. Deployer clean, but 15.70% tokens bundled. Bullish momentum, but exercise caution on volatility. DYOR
 
 
 and also follow like this format:

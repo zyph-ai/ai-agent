@@ -153,4 +153,4 @@ export const displayLatestCoinsAnalysis = async () => {
   return { output, profits: analyses.length };
 };
 
-displayLatestCoinsAnalysis();
+await displayLatestCoinsAnalysis();

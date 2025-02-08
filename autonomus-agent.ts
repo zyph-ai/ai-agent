@@ -3,11 +3,10 @@ import {
   DeepseekAI,
   type DeepseekChatCompletionMessageParam,
 } from "./deepseek-client";
-import { TwitterApi } from "twitter-api-v2";
 import { displayLatestCoinsAnalysis } from "./reanalyze-call";
-import dotenv from "dotenv";
-import fs from "fs";
 import { redis } from "./redis";
+import { postTweetsWithMedia } from "./twitter-scrapper";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -21,14 +20,14 @@ const otherConfig = {
 
 //@Learn more deepinfra with deepseek r1 https://deepinfra.com/deepseek-ai/DeepSeek-R1
 const zyphAIAgent = new DeepseekAI({
-  model: "deepseek-ai/DeepSeek-R1",
+  model: "NousResearch/Hermes-3-Llama-3.1-405B",
   ...otherConfig,
 });
 
 const maxPostsPerDay = 100;
-const maxPosts = 4;
+const maxPosts = 5;
 const intervalMinutes = 5;
-const retryAfterMinutes = 30;
+const retryAfterMinutes = 35;
 let count = 0;
 
 const getPostCount = async () => {
@@ -36,25 +35,10 @@ const getPostCount = async () => {
   return storedCoins.length;
 };
 
-const twitterClient = new TwitterApi({
-  appKey: process.env.TWITTER_API_KEY!,
-  appSecret: process.env.TWITTER_API_SECRET!,
-  accessToken: process.env.TWITTER_ACCESS_TOKEN!,
-  accessSecret: process.env.TWITTER_ACCESS_SECRET!,
-});
-
 const postToTwitter = async (content: string) => {
   const postCount = await getPostCount();
   try {
-    const imageBuffer = fs.readFileSync("output.png");
-    const mediaId = await twitterClient.v1.uploadMedia(imageBuffer, {
-      mimeType: "image/png",
-    });
-
-    console.log("Image uploaded to Twitter, media ID:", mediaId);
-    await twitterClient.v2.tweet(content, {
-      media: { media_ids: [mediaId] },
-    });
+    await postTweetsWithMedia(content);
 
     console.log(
       `✅ Tweet posted successfully. Total posts today: ${
@@ -107,8 +91,7 @@ const executeAnalysisDuringWait = async () => {
     const analysisCall = await displayLatestCoinsAnalysis();
 
     if (analysisCall.profits >= 1) {
-      await twitterClient.v2.tweet(analysisCall.output);
-      console.log("✅ Analysis tweet posted successfully");
+      // TODO: Implement post tweet analysis
     }
   } catch (error) {
     console.error("❌ Failed to post analysis tweet:", error);
@@ -127,7 +110,7 @@ const startScheduler = async () => {
       count = 0;
       clearInterval(intervalId);
 
-      executeAnalysisDuringWait();
+      // executeAnalysisDuringWait();
       setTimeout(startScheduler, retryAfterMinutes * 60 * 1000);
       return;
     }
