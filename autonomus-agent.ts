@@ -58,6 +58,7 @@ const runAnalysisAndPost = async () => {
 
   if (postCount >= maxPostsPerDay) {
     console.log("🚫 Max daily posts reached. Stopping execution.");
+    await redis.flushall();
     process.exit(0);
   }
 

@@ -33,7 +33,7 @@ pnpm install
 To start the agent:
 
 ```bash
-pnpm run start
+pnpm run:agent or npx tsx autonomus-agent.ts
 ```
 
 ### How It Works
