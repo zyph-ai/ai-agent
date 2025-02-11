@@ -120,7 +120,11 @@ export const formatMarketCap = (marketCap: number): string => {
 
 export const displayLatestCoinsAnalysis = async () => {
   const analyses = (await analyzeLatestCoins()).filter(
-    (coin) => coin.status === "PROFIT"
+    (v) => v.performance === "PROFIT"
+  );
+
+  const analysesRugCoin = (await analyzeLatestCoins()).filter(
+    (v) => v.performance === "RUG"
   );
 
   let output = "\n📊 Latest Coins Analysis:\n";
@@ -128,11 +132,6 @@ export const displayLatestCoinsAnalysis = async () => {
 
   analyses.forEach((coin) => {
     const statusEmoji = { PROFIT: "✅", STABLE: "📉", RUG: "❌" }[coin.status];
-
-    const profitText =
-      coin.status === "PROFIT" && coin.profitPercentage
-        ? ` +${coin.profitPercentage.toFixed(1)}%`
-        : "";
 
     const handleSymbol = `${
       coin.symbol.length > 6 ? `#${coin.symbol}` : `$${coin.symbol}`
@@ -143,10 +142,12 @@ export const displayLatestCoinsAnalysis = async () => {
      Entry Call MC: ${formatMarketCap(coin.initialMarketCap)}
      Current MC: ${formatMarketCap(coin.currentMarketCap)}
      Status: ${statusEmoji} ${coin.performance}
+
+    
      ------------------------\n\n`;
   });
 
-  output += "-------- 🔥🔥🔥🔥 --------\n";
+  output += `-------- ${analyses.length} PROFIT 🔥🔥🔥🔥 / ${analysesRugCoin.length} RUG --------\n`;
 
   console.log(output + "\n");
 

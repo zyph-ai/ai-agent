@@ -6,6 +6,8 @@ import { trenchBotAnalysisBundle } from "./trenchbot";
 import { generateImage } from "./generate/metadata-coin";
 import { redis } from "./redis";
 
+const TRESHOLD_BUNDLERS_PERCENTAGE = 50;
+
 export const saveMetadataCoin = async (
   tokenAddress: string,
   metadata: Record<any, any>
@@ -57,9 +59,10 @@ export const analyzeSolanaCoin = async (): Promise<string | void> => {
     const bundle = await trenchBotAnalysisBundle(getCoinCA);
 
     if (
-      bundle?.total_percentage_bundled > 36 ||
+      bundle?.total_percentage_bundled > TRESHOLD_BUNDLERS_PERCENTAGE ||
       bundle?.creator_analysis?.risk_level === "HIGH" ||
-      bundle?.creator_analysis?.holding_percentage > 36
+      bundle?.creator_analysis?.holding_percentage >
+        TRESHOLD_BUNDLERS_PERCENTAGE
     ) {
       console.log(
         `❗ Total holding / deployer holding percentage is too high (${bundle.total_percentage_bundled}/${bundle.creator_analysis.holding_percentage}%) and this token is very risky based on deployer history, trying next coin...\n`
